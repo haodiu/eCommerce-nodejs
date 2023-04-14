@@ -3,7 +3,7 @@
 const shopModel = require("../models/shop.model")
 const bcrypt = require('bcrypt')
 const crypto = require('node:crypto')
-const { default: KeyTokenService } = require("./keyToken.service")
+const KeyTokenService = require('./keytoken.service')
 const createTokenPair = require("../auth/authUltils")
 const RoleShop = {
     SHOP: '001',
@@ -37,7 +37,7 @@ class AccessService {
 
                 console.log({privateKey, publicKey})  //save collection KeyStore
 
-                const keyStore = await KeyTokenService.createKeyToken({
+                const keyStore = await  KeyTokenService.createKeyToken({
                     userId: newShop._id,
                     publicKey,
                     privateKey
