@@ -5,6 +5,8 @@ const bcrypt = require('bcrypt')
 const crypto = require('node:crypto')
 const KeyTokenService = require('./keytoken.service')
 const createTokenPair = require("../auth/authUltils")
+const {BadRequestError, ConflictRequestError} = require('../core/error.response')
+
 const RoleShop = {
     SHOP: '001',
     WRITER: '002',
@@ -14,14 +16,10 @@ const RoleShop = {
 
 class AccessService {
     static signUp = async ({name, email, password}) => {
-        try {
             // check email exist
-            const holderShop = await shopModel.findOne({ email }).lean()
+            const holderShop = await shopModel.findOne({ email }).lean().exec() // Refactor this redundant 'await' on a non-promise when it hasn't .exec()
             if (holderShop) {
-                return {
-                    code: 'xxxx',
-                    message: 'shop already registered!'
-                }
+                throw new BadRequestError('Error: Shop already registered!')
             }
             
             const passwordHash = await bcrypt.hash(password, 10)
@@ -69,15 +67,6 @@ class AccessService {
                 code: 200,
                 metadata: null
             }
-            
-        } catch (error) {
-            console.log(error);
-            return {
-                code: 'xxxx',
-                message: error.message,
-                status: 'error'
-            }
-        }
     }
 
 }
