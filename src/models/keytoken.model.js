@@ -20,10 +20,14 @@ const keyTokenSchema = new Schema(
       type: String,
       required: true,
     },
-    refreshToken: {
+    refreshTokensUsed: {
       type: Array,
-      default: [],
-    }
+      default: [], // RT đã được sử dụung
+    },
+    refreshToken: {
+      type: String,
+      required: true,
+    },
   },
   {
     timestamps: true,
@@ -31,4 +35,4 @@ const keyTokenSchema = new Schema(
   }
 );
 
-module.exports = model(DOCUMENT_NAME, keyTokenSchema)
+module.exports = model(DOCUMENT_NAME, keyTokenSchema);

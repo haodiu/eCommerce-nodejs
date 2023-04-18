@@ -1,36 +1,74 @@
-'use strict'
+"use strict";
 
 const StatusCode = {
-    FOBIDDEN: 403,
-    CONFLICT: 409
-}
+  FORBIDDEN: 403,
+  CONFLICT: 400,
+};
 
-const ResonStatusCode = {
-    FOBIDDEN: 'Bad request error',
-    CONFLICT: 'Conflict error'
-}
+const ReasonStatusCode = {
+  FORBIDDEN: "Bad request error",
+  CONFLICT: "Conflict error",
+};
+
+const { StatusCodes, ReasonPhrases } = require("../utils/httpStatusCode");
 
 class ErrorResponse extends Error {
-
-    constructor(message, status) {
-        super(message)
-        this.status = status
-    }
+  constructor(message, status) {
+    super(message);
+    this.status = status;
+  }
 }
 
 class ConflictRequestError extends ErrorResponse {
-    constructor(message = ResonStatusCode.CONFLICT, status = StatusCode.CONFLICT) {
-        super(message, status)
-    }
+  constructor(
+    message = ReasonStatusCode.CONFLICT,
+    statusCode = StatusCode.FORBIDDEN
+  ) {
+    super(message, statusCode);
+  }
 }
 
 class BadRequestError extends ErrorResponse {
-    constructor(message = ResonStatusCode.FOBIDDEN, status = StatusCode.FOBIDDEN) {
-        super(message, status)
-    }
+  constructor(
+    message = ReasonStatusCode.CONFLICT,
+    statusCode = StatusCode.FORBIDDEN
+  ) {
+    super(message, statusCode);
+  }
 }
 
-module.exports = {
-    ConflictRequestError,
-    BadRequestError
+class AuthFailureError extends ErrorResponse {
+  constructor(
+    message = ReasonPhrases.UNAUTHORIZED,
+    statusCode = StatusCodes.UNAUTHORIZED
+  ) {
+    {
+      super(message, statusCode);
+    }
+  }
 }
+
+class NotFoundError extends ErrorResponse {
+  constructor(
+    message = ReasonPhrases.NOT_FOUND,
+    statusCode = StatusCode.NOT_FOUND
+  ) {
+    super(message, statusCode);
+  }
+}
+
+class ForbiddenError extends ErrorResponse {
+  constructor(
+    message = ReasonPhrases.FORBIDDEN,
+    statusCode = StatusCode.FORBIDDEN
+  ) {
+    super(message, statusCode);
+  }
+}
+module.exports = {
+  ConflictRequestError,
+  BadRequestError,
+  NotFoundError,
+  AuthFailureError,
+  ForbiddenError,
+};

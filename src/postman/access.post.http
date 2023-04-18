@@ -3,10 +3,10 @@
 ### signup
 POST {{url_dev}}/shop/signup
 Content-Type: application/json
-x-api-key: 85a069212a04c2e4d1d53353c1217cf447193b6b7776556f9f5d56fac1f1514a2e792d59b34c07695a607b9540173dc5724504ce6b4e99242358c765076c648f
+x-api-key: 789917bf7c054142a26d4c56531a5f5d2e37a5cd85abcc098a3c8cebc185a83dd920f8729f2336f53d849c6511b746a91a279ac687583b3db4d2672cc04ccf37
 
 {
     "name": "Shop Z",
-    "email": "haodiudiu@gmail.com",
+    "email": "haodiudiu6@gmail.com",
     "password": "abc123"
 }
