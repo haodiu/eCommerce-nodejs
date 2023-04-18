@@ -13,6 +13,7 @@ const { getInfoData } = require("../utils/index");
 const { createTokenPair, verifyJWT } = require("../auth/authUltils");
 const { TokenExpiredError } = require("jsonwebtoken");
 const KeyTokenService = require("./keytoken.service");
+const { keys } = require("lodash");
 
 const RoleShop = {
   SHOP: "001",
@@ -22,6 +23,45 @@ const RoleShop = {
 };
 
 class AccessService {
+  static handlerRefreshTokenV2 = async ({keyStore, user, refreshToken}) => {
+    console.log('hello -- ', user);
+    const { userId, email } = user;
+    if (keyStore.refreshTokensUsed.includes(refreshToken)) {
+      await KeyTokenService.deleteKeyById(userId);
+      throw new ForbiddenError("Something wrong happned. Please login again!");
+    }
+
+    if (keyStore.refreshToken !== refreshToken) {
+      throw new AuthFailureError("Shop not registered!");
+    }
+
+    const foundShop = await findByEmail({ email });
+    if (!foundShop) {
+      throw new AuthFailureError("Shop not registered 2");
+    }
+
+    const tokens = await createTokenPair(
+      { userId, email },
+      keyStore.publicKey,
+      keyStore.privateKey
+    );
+
+    // update token
+    await keyStore.updateOne({
+      $set: {
+        refreshToken: tokens.refreshToken
+      },
+      $addToSet: {
+        refreshTokensUsed: refreshToken
+      }
+    })
+
+    return {
+      user,
+      tokens,
+    };
+  };
+
   static handlerRefreshToken = async (refreshToken) => {
     // check this token used
     console.log(`hello 1`);
