@@ -7,6 +7,13 @@ const {
   furniture,
 } = require("../models/product.model");
 const { BadRequestError, ForbiddenError } = require("../core/error.response");
+const {
+  findAllDraftsForShop,
+  findAllPublishForShop,
+  publicProductByShop,
+  unPublicProductByShop,
+  searchProductByUser
+} = require("../models/repositories/product.repo");
 
 class ProductFactory {
   /**
@@ -24,6 +31,32 @@ class ProductFactory {
       default:
         throw new BadRequestError(`Invalid product types: ${type}`);
     }
+  }
+
+  // PUT
+  static async publicProductByShop({ product_shop, product_id }) {
+    return await publicProductByShop({ product_shop, product_id });
+  }
+
+  static async unPublicProductByShop({ product_shop, product_id }) {
+    return await unPublicProductByShop({ product_shop, product_id });
+  }
+
+  // END PUT
+
+  // QUERY
+  static async findAllDraftsForShop({ product_shop, limit = 50, skip = 0 }) {
+    const query = { product_shop, isDraft: true };
+    return await findAllDraftsForShop({ query, limit, skip });
+  }
+
+  static async findAllPublishForShop({ product_shop, limit = 50, skip = 0 }) {
+    const query = { product_shop, isPublished: true };
+    return await findAllPublishForShop({ query, limit, skip });
+  }
+
+  static async searchProduct({keySearch}) {
+    return searchProductByUser({keySearch})
   }
 }
 
