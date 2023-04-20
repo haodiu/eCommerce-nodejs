@@ -5,15 +5,15 @@ const StatusCode = {
     CREATED: 201
 }
 
-const ResonStatusCode = {
+const ReasonStatusCode = {
     OK: 'Success!',
     CREATED: 'Created!'
 }
 
 class SuccessResponse {
 
-    constructor({ message, statusCode = StatusCode.OK, resonStatusCode = ResonStatusCode.OK, metadata = {}}) {
-        this.message = !message ? resonStatusCode : message
+    constructor({ message, statusCode = StatusCode.OK, reasonStatusCode = ReasonStatusCode.OK, metadata = {}}) {
+        this.message = !message ? reasonStatusCode : message
         this.status = statusCode
         this.metadata = metadata
     }
@@ -32,8 +32,8 @@ class OK extends SuccessResponse {
 
 class CREATED extends SuccessResponse {
     
-    constructor({options = {}, message, statusCode = StatusCode.CREATED, resonStatusCode = ResonStatusCode.CREATED, metadata}) {
-        super({message, statusCode, resonStatusCode, metadata})
+    constructor({options = {}, message, statusCode = StatusCode.CREATED, reasonStatusCode = ReasonStatusCode.CREATED, metadata}) {
+        super({message, statusCode, reasonStatusCode, metadata})
         this.options = options
     }
 }

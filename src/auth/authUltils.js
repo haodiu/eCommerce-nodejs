@@ -90,13 +90,14 @@ const authenticationV2 = asyncHandler(async (req, res, next) => {
   if (req.headers[HEADER.REFRESHTOKEN]) {
     try {
       const refreshToken = req.headers[HEADER.REFRESHTOKEN];
-      console.log({refreshToken, keyStore});
       const decodeUser = JWT.verify(refreshToken, keyStore.privateKey);
       if (userId !== decodeUser.userId) {
         throw new AuthFailureError("Invalid userId");
       }
       req.keyStore = keyStore;
       req.user = decodeUser;
+
+      console.log(req.user);
       req.refreshToken = refreshToken;
       return next();
     } catch (error) {
@@ -110,6 +111,7 @@ const authenticationV2 = asyncHandler(async (req, res, next) => {
     const decodeUser = JWT.verify(accessToken, keyStore.publicKey);
     if (userId !== decodeUser.userId)
       throw new AuthFailureError("Invalid UserId");
+    req.user = decodeUser;
     req.keyStore = keyStore;
     return next();
   } catch (error) {
@@ -118,6 +120,7 @@ const authenticationV2 = asyncHandler(async (req, res, next) => {
 });
 
 const verifyJWT = async (token, keySecret) => {
+  // keySecret: key used to sign the JWT (privateKey)
   console.log("token", token);
   return await JWT.verify(token, keySecret);
 };
